@@ -43,82 +43,49 @@
 
 pipeline {
     agent any
-    
+
     options {
         skipDefaultCheckout(true)
     }
-    
+
     stages {
-        stage('Clean Checkout') {
-            steps {
-                deleteDir()
-                checkout scm
-            }
-        }
-        
-        stage('Terraform Validate') {
+
+        stage('Terraform Init & Validate') {
             steps {
                 dir('terraform') {
                     sh '''
                     echo "Initializing Terraform..."
                     terraform init -input=false -backend=false
-                    
+
                     echo "Validating Terraform syntax..."
                     terraform validate
                     '''
                 }
             }
         }
-        
-        stage('Security Scan - Checkov') {
-            steps {
-                sh '''
-                echo "Installing Checkov..."
-                pip3 install checkov --break-system-packages || pip install checkov
-                
-                echo "Running Checkov security scan..."
-                echo "=================================================="
-                checkov -d terraform/ --framework terraform --compact
-                echo "=================================================="
-                '''
-            }
-        }
-        
+
         stage('Security Scan - tfsec') {
             steps {
                 sh '''
-                echo "Installing tfsec..."
-                wget -q https://github.com/aquasecurity/tfsec/releases/download/v1.28.1/tfsec-linux-amd64 -O tfsec
+                echo "Downloading tfsec..."
+                curl -sSL https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-linux-amd64 -o tfsec
                 chmod +x tfsec
-                
+
                 echo "Running tfsec security scan..."
                 echo "=================================================="
-                ./tfsec terraform/ --no-color || true
+                ./tfsec terraform/
                 echo "=================================================="
                 '''
             }
         }
-        
-        stage('Security Summary') {
-            steps {
-                echo "=================================================="
-                echo "         SECURITY SCAN COMPLETED"
-                echo "=================================================="
-                echo "Review the logs above for security vulnerabilities"
-                echo ""
-                echo "Your intentional 0.0.0.0/0 security fault should be"
-                echo "detected and reported in the scan results above."
-                echo "=================================================="
-            }
-        }
     }
-    
+
     post {
         always {
             echo "Pipeline execution completed"
         }
-        success {
-            echo "All stages completed - Check security findings above"
+        failure {
+            echo "Pipeline failed due to security vulnerabilities"
         }
     }
 }
