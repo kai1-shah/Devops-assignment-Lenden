@@ -7,17 +7,24 @@ pipeline {
 
     stages {
 
-        stage('Terraform Plan') {
+        stage('Terraform Init & Plan') {
             steps {
                 dir('terraform') {
                     sh '''
-                    echo "Running Terraform plan"
                     terraform init -input=false
-                    terraform plan -var="ami_id=ami-0f5ee92e2d63afc18"
+                    terraform plan
                     '''
                 }
             }
         }
 
+        stage('Security Scan - Checkov') {
+            steps {
+                sh '''
+                pip install checkov
+                checkov -d terraform/ --framework terraform
+                '''
+            }
+        }
     }
 }
