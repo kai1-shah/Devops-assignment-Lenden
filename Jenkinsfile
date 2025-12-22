@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -9,12 +10,15 @@ pipeline {
         }
 
         stage('Trivy Scan - Terraform') {
+            agent {
+                docker {
+                    image 'aquasec/trivy:latest'
+                    args '-v /var/jenkins_home/workspace:/project'
+                }
+            }
             steps {
                 sh '''
-                docker run --rm \
-                  -v "$PWD:/project" \
-                  aquasec/trivy:latest \
-                  config /project/terraform
+                trivy config /project/devsecops-pipeline/terraform
                 '''
             }
         }
