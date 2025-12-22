@@ -118,39 +118,7 @@ pipeline {
             echo "Pipeline execution completed"
         }
         success {
-            echo "✓ All stages completed - Check security findings above"
+            echo "All stages completed - Check security findings above"
         }
     }
 }
-```
-
-## Key Changes:
-
-1. ✅ **Removed `terraform plan`** - This requires AWS credentials we don't have
-2. ✅ **Added `terraform init -backend=false`** - Initializes without backend/credentials
-3. ✅ **Added `terraform validate`** - Checks syntax without needing credentials
-4. ✅ **Kept Checkov scan** - Will detect your `0.0.0.0/0` issue
-5. ✅ **Added tfsec scan** - Another scanner to catch security issues
-6. ✅ **Removed `|| true` from Checkov** - So you see the actual findings (but added to tfsec)
-
-## Apply This NOW:
-
-1. **Go to GitHub**: http://github.com/kai1-shah/devops-assignment-Lenden
-2. **Click Jenkinsfile** → **Edit** (pencil icon)
-3. **Delete everything and paste the code above**
-4. **Commit**: "Final fix - skip plan and run security scans"
-5. **Go to Jenkins** → **Build Now**
-
-## Expected Output:
-```
-[Security Scan - Checkov]
-Check: CKV_AWS_260: "Ensure no security groups allow ingress from 0.0.0.0:0"
-	FAILED for resource: aws_security_group.your_security_group
-	File: terraform/main.tf:XX-XX
-	
-[Security Scan - tfsec]
-Problem found in main.tf
-  aws-ec2-no-public-ingress-sgr
-  Security group rule allows ingress from 0.0.0.0/0
-  Line: XX
-  cidr_blocks = ["0.0.0.0/0"]  ← YOUR SECURITY FAULT!
