@@ -1,17 +1,7 @@
 pipeline {
     agent any
     
-    options {
-        skipDefaultCheckout(true)
-    }
-    
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        
         stage('Terraform Init & Plan') {
             steps {
                 dir('terraform') {
