@@ -1,0 +1,12 @@
+# Node
+node_modules
+npm-debug.log
+
+# Terraform
+terraform/.terraform/
+
+# Jenkins
+jenkins_home
+
+# OS
+.DS_Store
