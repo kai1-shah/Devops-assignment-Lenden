@@ -43,11 +43,6 @@
 
 pipeline {
     agent any
-    stage('Clean Workspace') {
-    steps {
-        cleanWs()
-    }
-}
 
     options {
         skipDefaultCheckout(true)
@@ -55,15 +50,27 @@ pipeline {
 
     stages {
 
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Terraform Init & Validate') {
             steps {
                 dir('terraform') {
                     sh '''
-                    echo "Initializing Terraform..."
-                    terraform init -input=false -backend=false
+                        echo "Initializing Terraform..."
+                        terraform init -input=false -backend=false
 
-                    echo "Validating Terraform syntax..."
-                    terraform validate
+                        echo "Validating Terraform..."
+                        terraform validate
                     '''
                 }
             }
@@ -72,14 +79,12 @@ pipeline {
         stage('Security Scan - tfsec') {
             steps {
                 sh '''
-                echo "Downloading tfsec..."
-                curl -sSL https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-linux-amd64 -o tfsec
-                chmod +x tfsec
+                    echo "Downloading tfsec..."
+                    curl -sSL https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-linux-amd64 -o tfsec
+                    chmod +x tfsec
 
-                echo "Running tfsec security scan..."
-                echo "=================================================="
-                ./tfsec terraform/
-                echo "=================================================="
+                    echo "Running tfsec scan..."
+                    ./tfsec terraform/
                 '''
             }
         }
