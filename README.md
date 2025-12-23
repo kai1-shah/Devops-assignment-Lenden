@@ -1,28 +1,7 @@
 DevSecOps CI/CD Pipeline with Terraform & Jenkins
 📌 Project Overview
-devsecops-ci-cd-pipeline/
-│
-├── app/                        # Sample application (Node.js)
-│   ├── index.js
-│   ├── package.json
-│   └── node_modules/
-│
-├── terraform/                  # Infrastructure as Code (IaC)
-│   ├── .terraform/             # Terraform internal files
-│   ├── .terraform.lock.hcl     # Provider lock file
-│   ├── main.tf                 # Main infrastructure definitions
-│   ├── variables.tf            # Input variables
-│   ├── terraform.tfvars        # Variable values (environment-specific)
-│   ├── outputs.tf              # Terraform outputs
-│   ├── terraform.tfstate       # Terraform state (local)
-│   └── terraform.tfstate.backup
-│
-├── Jenkinsfile                 # Jenkins CI/CD pipeline definition
-├── dockerfile                  # Docker image for Jenkins/app (if used)
-├── docker-compose.yaml         # Local Jenkins setup
-├── .gitignore                  # Git ignore rules
-├── package-lock.json
-└── README.md                   # Project documentation
+<img width="759" height="695" alt="image" src="https://github.com/user-attachments/assets/18d51922-5eb0-4a89-b79f-f8caed461ac9" />
+
 
 
 This project demonstrates a DevSecOps CI/CD pipeline that provisions and validates cloud infrastructure using Terraform, while enforcing security best practices through automated security scanning in Jenkins.
