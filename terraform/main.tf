@@ -2,55 +2,64 @@ resource "aws_security_group" "secure_sg" {
   name        = "secure-web-sg"
   description = "Security group with restricted access"
 
-  # INGRESS RULE - FIXED: Restrict to specific IP instead of 0.0.0.0/0
+  # INGRESS RULE - Allow HTTP from your IPs
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.113.45/32"]  # Replace 203.0.113.45 with YOUR actual IP
-    description = "Allow HTTP from specific IP"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    ipv6_cidr_blocks = ["2405:201:37:c0af:21ba:1778:35f:dbef/128", "2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+    cidr_blocks      = ["192.168.29.18/32"]
+    description      = "Allow HTTP from your IPs"
   }
 
+  # INGRESS RULE - Allow HTTPS from your IPs
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.113.45/32"]  # Replace 203.0.113.45 with YOUR actual IP
-    description = "Allow HTTPS from specific IP"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    ipv6_cidr_blocks = ["2405:201:37:c0af:21ba:1778:35f:dbef/128", "2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+    cidr_blocks      = ["192.168.29.18/32"]
+    description      = "Allow HTTPS from your IPs"
   }
 
-  # INGRESS RULE - FIXED: Restrict SSH access
+  # INGRESS RULE - Allow SSH from your IPs
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.113.45/32"]  # Replace 203.0.113.45 with YOUR actual IP
-    description = "Allow SSH from specific IP"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    ipv6_cidr_blocks = ["2405:201:37:c0af:21ba:1778:35f:dbef/128", "2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+    cidr_blocks      = ["192.168.29.18/32"]
+    description      = "Allow SSH from your IPs"
   }
 
-  # EGRESS RULE - FIXED: Restrict to IPv6 for outbound traffic
+  # EGRESS RULE - Allow HTTPS outbound
   egress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     ipv6_cidr_blocks = ["::/0"]
-    description     = "Allow HTTPS outbound for package updates"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow HTTPS outbound for package updates"
   }
 
+  # EGRESS RULE - Allow HTTP outbound
   egress {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
     ipv6_cidr_blocks = ["::/0"]
-    description     = "Allow HTTP outbound for package updates"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow HTTP outbound for package updates"
   }
 
+  # EGRESS RULE - Allow DNS queries
   egress {
     from_port       = 53
     to_port         = 53
     protocol        = "udp"
     ipv6_cidr_blocks = ["::/0"]
-    description     = "Allow DNS queries"
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow DNS queries"
   }
 
   tags = {
