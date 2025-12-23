@@ -43,6 +43,11 @@
 
 pipeline {
     agent any
+    stage('Clean Workspace') {
+    steps {
+        cleanWs()
+    }
+}
 
     options {
         skipDefaultCheckout(true)
