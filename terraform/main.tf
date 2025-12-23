@@ -2,7 +2,6 @@ resource "aws_security_group" "secure_sg" {
   name        = "secure-web-sg"
   description = "Security group with restricted access"
 
-  # INGRESS RULE - Allow HTTP from your IPs
   ingress {
     from_port       = 80
     to_port         = 80
@@ -12,7 +11,6 @@ resource "aws_security_group" "secure_sg" {
     description      = "Allow HTTP from your IPs"
   }
 
-  # INGRESS RULE - Allow HTTPS from your IPs
   ingress {
     from_port       = 443
     to_port         = 443
@@ -22,7 +20,6 @@ resource "aws_security_group" "secure_sg" {
     description      = "Allow HTTPS from your IPs"
   }
 
-  # INGRESS RULE - Allow SSH from your IPs
   ingress {
     from_port       = 22
     to_port         = 22
@@ -32,7 +29,6 @@ resource "aws_security_group" "secure_sg" {
     description      = "Allow SSH from your IPs"
   }
 
-  # EGRESS RULE - Allow HTTPS outbound
   egress {
     from_port       = 443
     to_port         = 443
@@ -42,7 +38,6 @@ resource "aws_security_group" "secure_sg" {
     description      = "Allow HTTPS outbound for package updates"
   }
 
-  # EGRESS RULE - Allow HTTP outbound
   egress {
     from_port       = 80
     to_port         = 80
@@ -52,7 +47,6 @@ resource "aws_security_group" "secure_sg" {
     description      = "Allow HTTP outbound for package updates"
   }
 
-  # EGRESS RULE - Allow DNS queries
   egress {
     from_port       = 53
     to_port         = 53
@@ -73,14 +67,12 @@ resource "aws_instance" "web_server" {
 
   vpc_security_group_ids = [aws_security_group.secure_sg.id]
 
-  # FIXED: Enable IMDS token requirement (HIGH severity fix)
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"
     http_put_response_hop_limit = 1
   }
 
-  # FIXED: Enable encryption for root block device (HIGH severity fix)
   root_block_device {
     volume_type           = "gp3"
     volume_size           = 20
