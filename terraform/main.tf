@@ -4,29 +4,28 @@ resource "aws_security_group" "secure_sg" {
 
   # INGRESS RULE - FIXED: Restrict to specific IP instead of 0.0.0.0/0
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP/32"]  # Replace with your IP or specific range
-    description = "Allow HTTP from specific IP"
-  }
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  ipv6_cidr_blocks = ["2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+  description = "Allow HTTP from specific IP"
+}
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP/32"]  # Replace with your IP or specific range
-    description = "Allow HTTPS from specific IP"
-  }
+ingress {
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  ipv6_cidr_blocks = ["2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+  description = "Allow HTTPS from specific IP"
+}
 
-  # INGRESS RULE - FIXED: Restrict SSH access
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP/32"]  # Replace with your IP
-    description = "Allow SSH from specific IP"
-  }
+ingress {
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  ipv6_cidr_blocks = ["2405:201:37:c0af:2cd6:b699:71f8:6687/128"]
+  description = "Allow SSH from specific IP"
+}
 
   # EGRESS RULE - FIXED: Restrict to necessary destinations only
   egress {
